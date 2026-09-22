@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reaction Test</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="console">
+  <div class="masthead">
+    <h1>Reaction Test</h1>
+    <span class="mode">10 trials</span>
+  </div>
+  <p class="subline" id="intro">
+    Each trial arms after a short wait, then fires a colour change and a tone at the same
+    moment. Press <strong>SPACE</strong> (or click the circle) the instant it fires. Ten valid
+    trials, then your results export as a .csv.
+  </p>
+
+  <div class="ticks" id="ticks"></div>
+
+  <div class="stage">
+    <div class="stimulus" id="stimulus" role="button" tabindex="0" aria-label="Reaction stimulus"></div>
+    <div class="status" id="status">Press start when you're ready</div>
+    <div class="readout" id="readout"></div>
+  </div>
+
+  <button class="btn" id="primaryBtn">Start experiment</button>
+
+  <div id="resultsBlock" style="display:none;">
+    <div class="stats">
+      <div class="stat"><div class="v" id="statAvg">–</div><div class="l">avg ms</div></div>
+      <div class="stat"><div class="v" id="statMin">–</div><div class="l">fastest</div></div>
+      <div class="stat"><div class="v" id="statMax">–</div><div class="l">slowest</div></div>
+    </div>
+    <table class="results">
+      <thead><tr><th>Trial</th><th class="num">Reaction (ms)</th></tr></thead>
+      <tbody id="resultsBody"></tbody>
+    </table>
+    <div class="btn-row">
+      <button class="btn secondary" id="restartBtn">Run again</button>
+      <button class="btn" id="exportBtn">Export .csv</button>
+    </div>
+  </div>
+
+  <label class="sound-toggle">
+    <input type="checkbox" id="soundToggle" checked>
+    Play tone with the colour change
+  </label>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

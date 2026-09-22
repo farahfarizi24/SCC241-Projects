@@ -1,0 +1,137 @@
+:root {
+  --bg: #0B0D10;
+  --panel: #14171B;
+  --panel-border: #23272C;
+  --text: #E7E9EA;
+  --muted: #7C868F;
+  --muted-dim: #4B535A;
+  --idle: #363C42;
+  --armed: #2E6DA8;
+  --go: #F2C230;
+  --good: #35C97B;
+  --mid: #F2C230;
+  --bad: #E5484D;
+  --focus: #5AA9E6;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 24px;
+}
+
+.console {
+  width: 100%;
+  max-width: 460px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 28px 26px 24px;
+}
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.masthead h1 { font-size: 17px; font-weight: 650; margin: 0; letter-spacing: 0.2px; }
+.masthead .mode { font-size: 12px; color: var(--muted); }
+
+.subline { font-size: 13px; color: var(--muted); margin: 0 0 20px; line-height: 1.5; }
+
+.ticks { display: flex; gap: 6px; margin-bottom: 22px; }
+.tick { flex: 1; height: 4px; border-radius: 2px; background: var(--idle); transition: background 0.25s ease; }
+.tick.current { background: var(--muted); }
+.tick.good { background: var(--good); }
+.tick.mid { background: var(--mid); }
+.tick.bad { background: var(--bad); }
+.tick.miss { background: var(--muted-dim); }
+
+.stage { display: flex; flex-direction: column; align-items: center; padding: 18px 0 6px; }
+
+.stimulus {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: var(--idle);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset;
+  transition: background 0.06s linear, transform 0.15s ease;
+  cursor: pointer;
+}
+.stimulus:active { transform: scale(0.98); }
+.stimulus.armed { background: var(--armed); }
+.stimulus.go { background: var(--go); box-shadow: 0 0 40px 4px rgba(242,194,48,0.35); }
+.stimulus.bad-flash { background: var(--bad); box-shadow: 0 0 32px 2px rgba(229,72,77,0.35); }
+
+.status { margin-top: 20px; font-size: 14px; color: var(--muted); text-align: center; min-height: 20px; }
+.status.emph { color: var(--text); font-weight: 600; }
+
+.readout {
+  margin-top: 6px;
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 34px;
+  font-weight: 600;
+  min-height: 42px;
+  text-align: center;
+}
+.readout .unit { font-size: 15px; color: var(--muted); font-weight: 500; margin-left: 3px; }
+
+.btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 13px 16px;
+  border-radius: 9px;
+  border: none;
+  background: var(--focus);
+  color: #0B0D10;
+  font-size: 15px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.btn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--panel-border); }
+.btn-row { display: flex; gap: 10px; }
+.btn-row .btn { margin-top: 0; }
+
+table.results {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 6px;
+  font-size: 13px;
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+}
+table.results th, table.results td { text-align: left; padding: 7px 4px; border-bottom: 1px solid var(--panel-border); }
+table.results th { color: var(--muted); font-weight: 600; font-family: -apple-system, sans-serif; }
+table.results td.num, table.results th.num { text-align: right; }
+table.results tr.flag td { color: var(--bad); }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 18px 0 4px; }
+.stat { background: rgba(255,255,255,0.02); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px 10px 8px; text-align: center; }
+.stat .v {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 19px;
+  font-weight: 650;
+}
+.stat .l { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.sound-toggle {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: 12px; color: var(--muted); margin-top: 14px; cursor: pointer; user-select: none;
+}
+.sound-toggle input { accent-color: var(--focus); }
+
+@media (max-width: 420px) {
+  .console { padding: 22px 18px 18px; }
+  .stimulus { width: 130px; height: 130px; }
+}
