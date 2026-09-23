@@ -1,9 +1,10 @@
 (() => {
-  const TOTAL_TRIALS = 10;
-  const MIN_WAIT = 2000;
-  const MAX_WAIT = 5000;
-  const RESPONSE_TIMEOUT = 3000; // ms after "go" before a trial counts as no-response
+  const TOTAL_TRIALS = 10; //number of trials
+  const MIN_WAIT = 2000; //min time 2seconds
+  const MAX_WAIT = 5000;//max time 5 sexonds
+  const RESPONSE_TIMEOUT = 3000; // user has 3 second to respond before it's assessed as no response.
 
+  // Find HTML elements by their IDs
   const stimulus = document.getElementById('stimulus');
   const status = document.getElementById('status');
   const readout = document.getElementById('readout');
@@ -19,7 +20,16 @@
   const soundToggle = document.getElementById('soundToggle');
   const intro = document.getElementById('intro');
 
+  // Current stage of the experiment:
+  // idle = waiting to start
+  // armed = waiting for the GO signal
+  // go = user can respond
+  // between = between trials
+  // done = experiment finished
+
   let phase = 'idle'; // idle | armed | go | between | done
+
+  
   let trialIndex = 0;
   let armTimer = null;
   let timeoutTimer = null;
@@ -29,7 +39,10 @@
   let audioCtx = null;
 
   function buildTicks() {
+  // Remove any existing trial indicators
     ticksEl.innerHTML = '';
+
+  // Create 10 small indicators, one for each trial
     for (let i = 0; i < TOTAL_TRIALS; i++) {
       const d = document.createElement('div');
       d.className = 'tick';
@@ -44,23 +57,35 @@
     if (el) el.className = 'tick ' + cls;
   }
 
+
+  // Play a beep sound
   function beep() {
+    //if toggle is not checked, do nothing
     if (!soundToggle.checked) return;
+    
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            // Resume the audio system if it is paused
       if (audioCtx.state === 'suspended') audioCtx.resume();
+            // Create a sound oscillator
       const osc = audioCtx.createOscillator();
+            // Create volume control
       const gain = audioCtx.createGain();
+            // Use a simple sine-wave sound
       osc.type = 'sine';
+            // Set the sound frequency
       osc.frequency.value = 880;
+            // Increase the volume quickly
       gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+      //reduce volume gain
       gain.gain.linearRampToValueAtTime(0.22, audioCtx.currentTime + 0.008);
       gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.16);
       osc.connect(gain).connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.18);
+      
+      osc.start();       // Start the sound
+      osc.stop(audioCtx.currentTime + 0.18);//stop sounds after 0.18s
     } catch (e) {
-      // audio unavailable (e.g. autoplay policy) — the visual cue still fires
+      // audio unavailable (catching error)
     }
   }
 
@@ -73,13 +98,14 @@
     resultsBlock.style.display = 'none';
     results = [];
     falseStarts = 0;
-    trialIndex = 0;
+    trialIndex = 0; //start from trial 1
     buildTicks();
     primaryBtn.style.display = 'none';
     readout.textContent = '';
     nextTrial();
   }
 
+  //to switch to another trial
   function nextTrial() {
     if (trialIndex >= TOTAL_TRIALS) {
       finishExperiment();
@@ -107,6 +133,7 @@
     timeoutTimer = setTimeout(() => registerResponse(null), RESPONSE_TIMEOUT);
   }
 
+  //  Handle a response that is too early
   function falseStart() {
     clearTimeout(armTimer);
     falseStarts++;
@@ -123,6 +150,7 @@
     }, 700);
   }
 
+  // Record the user's response
   function registerResponse(rtMs) {
     clearTimeout(timeoutTimer);
     phase = 'between';
@@ -151,6 +179,7 @@
     }, 900);
   }
 
+  
   function onTrigger() {
     if (phase === 'armed') {
       falseStart();
@@ -199,6 +228,7 @@
     }
   }
 
+  //building csv excel files
   function buildCsv() {
     const lines = ['trial,reaction_time_ms,status'];
     results.forEach(r => {
@@ -209,6 +239,7 @@
     return lines.join('\n');
   }
 
+  //exporting your data to the csv
   function exportCsv() {
     const csv = buildCsv();
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
